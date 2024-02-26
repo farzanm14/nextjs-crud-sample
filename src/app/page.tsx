@@ -1,6 +1,8 @@
 import { db } from "@/db";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic"; //the page not be built-up at build time, on refresh just reserve again and again
+
 export default async function Home() {
   const snippets = await db.snippet.findMany(); // bring all snippets from db
   const renderSnippets = snippets.map((snippetItem) => {

@@ -36,3 +36,13 @@ export default async function SnippetPreview(props: SnippetPreviewProps) {
     </div>
   );
 }
+
+export async function generateStaticParams() {
+  //use this func to enable caching system in dynamic files, in order to enhance next app performance
+  const snippets = await db.snippet.findMany();
+  return snippets.map((snippet) => {
+    return {
+      id: snippet.id.toString(),
+    };
+  });
+}

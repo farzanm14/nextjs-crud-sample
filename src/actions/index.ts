@@ -1,6 +1,7 @@
 "use server"; //all different functions that we define in this file, will treated as server actions by next js
 
 import { db } from "@/db";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function editSnippet(id: number, code: string) {
@@ -8,7 +9,7 @@ export async function editSnippet(id: number, code: string) {
     where: { id },
     data: { code },
   });
-
+  revalidatePath(`/snippets/${id}`);
   redirect(`/snippets/${id}`);
 }
 export async function deleteSnippet(id: number) {
@@ -16,6 +17,7 @@ export async function deleteSnippet(id: number) {
     where: { id },
   });
 
+  revalidatePath("/"); //control caching config, to render new changes
   redirect(`/`);
 }
 
@@ -59,6 +61,8 @@ export async function createSnippet(
       };
     }
   }
+
+  revalidatePath("/"); //control caching config, to render new changes
   // back to home page after creation
   redirect("/"); //This redirect should not appear in Try-Cache, because normally, when the redirect happens, NEXT thinks an error has occurred and displays the NEXT_REDIRECT error message.
 }
